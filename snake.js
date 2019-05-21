@@ -37,8 +37,9 @@ function respawn() {
     snakeCoorY = Math.floor(SIZE.HEIGHT / 2);
 
     var $snakeHead = $gameTable.children[snakeCoorY].children[snakeCoorX];
-    var $snakeTail = $gameTable.children[snakeCoorY + 1].children[snakeCoorX];
     $snakeHead.classList.add('snake-unit');
+   
+    var $snakeTail = $gameTable.children[snakeCoorY + 1].children[snakeCoorX]; 
     $snakeTail.classList.add('snake-unit');
     
     snake.push($snakeTail);
