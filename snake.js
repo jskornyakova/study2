@@ -12,6 +12,7 @@ var snakeCoorY;
 var interval;
 var direction = 'top';
 var snake = [];
+var score = 0;
 
 function prepareGameField() {
     $gameTable = document.createElement('table');
@@ -81,24 +82,61 @@ function move() {
     }
 
     var $newUnit = $gameTable.children[snakeCoorY].children[snakeCoorX];
+   
     if (!isSnakeUnit($newUnit)) {
         $newUnit.classList.add('snake-unit');
         snake.push($newUnit);
 
-        var $snakeRemoved = snake.shift();
-        $snakeRemoved.classList.remove('snake-unit');
+        if(!isFood($newUnit)) {
+            var $snakeRemoved = snake.shift();
+            $snakeRemoved.classList.remove('snake-unit');
+        }
+        
     } else {
         gameOver();
     }
+
+}
+
+function isFood(unit) {
+    if(unit.classList.contains('food-unit')) {
+        unit.classList.remove('food-unit');
+        score++;
+        document.querySelector('#score').textContent = score;
+        SNAKE_SPEED = 300 - score * 5;
+        clearInterval(interval);
+        interval = setInterval(move, SNAKE_SPEED);
+        createFood();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function createFood() {
+    while(true) {
+        var foodX = Math.floor(Math.random() * SIZE.WIDHT);
+        var foodY = Math.floor(Math.random() * SIZE.HEIGHT);
+
+        var $foodCell = $gameTable.children[foodY].children[foodX];
+        if(!snake.includes($foodCell)) {
+            $foodCell.classList.add('food-unit');
+            break;
+        }
+    }
+    
 }
 
 function handleStartClick(event){
     respawn();
 
     interval = setInterval(move, SNAKE_SPEED);
+    createFood();
 }
 
-function handleRenewClick(event) {}
+function handleRenewClick(event) {
+    window.location.reload();
+}
 
 function handleDirectionChange(event) {
     
